@@ -10,12 +10,13 @@ namespace Boilerplate.Services
 
     public class HttpService : IHttpService
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+
         public HttpService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
 
-        private readonly IHttpClientFactory _httpClientFactory;
         public Task<string> GetAsync(string url)
         {
             var httpClient = _httpClientFactory.CreateClient();

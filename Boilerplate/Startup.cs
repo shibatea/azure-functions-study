@@ -1,16 +1,18 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
 
+using System;
 using Azure.Identity;
-
+using Boilerplate;
 using Boilerplate.Options;
 using Boilerplate.Services;
-
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: FunctionsStartup(typeof(Boilerplate.Startup))]
+[assembly: FunctionsStartup(typeof(Startup))]
 
 namespace Boilerplate
 {
@@ -25,13 +27,14 @@ namespace Boilerplate
             builder.Services.AddSingleton<IGreetingService, GreetingService>();
             builder.Services.AddSingleton<IHttpService, HttpService>();
 
-            builder.Services.AddSingleton(provider => new CosmosClient(context.Configuration["CosmosConnection"], new CosmosClientOptions
-            {
-                SerializerOptions = new CosmosSerializationOptions
+            builder.Services.AddSingleton(provider => new CosmosClient(context.Configuration["CosmosConnection"],
+                new CosmosClientOptions
                 {
-                    PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
-                }
-            }));
+                    SerializerOptions = new CosmosSerializationOptions
+                    {
+                        PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+                    }
+                }));
 
             builder.Services.Configure<GreetingOptions>(context.Configuration.GetSection("Greeting"));
         }
@@ -45,7 +48,8 @@ namespace Boilerplate
                 // For Production (Using Key Vault with Managed Identity)
                 var builtConfig = builder.ConfigurationBuilder.Build();
 
-                builder.ConfigurationBuilder.AddAzureKeyVault(new Uri(builtConfig["KeyVaultEndpoint"]), new DefaultAzureCredential());
+                builder.ConfigurationBuilder.AddAzureKeyVault(new Uri(builtConfig["KeyVaultEndpoint"]),
+                    new DefaultAzureCredential());
             }
             else
             {

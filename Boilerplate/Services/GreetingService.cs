@@ -1,5 +1,4 @@
 ﻿using Boilerplate.Options;
-
 using Microsoft.Extensions.Options;
 
 namespace Boilerplate.Services
@@ -11,12 +10,12 @@ namespace Boilerplate.Services
 
     public class GreetingService : IGreetingService
     {
+        private readonly GreetingOptions _options;
+
         public GreetingService(IOptions<GreetingOptions> options)
         {
             _options = options.Value;
         }
-
-        private readonly GreetingOptions _options;
 
         public string SayHello(string name)
         {
